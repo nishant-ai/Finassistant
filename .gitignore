@@ -1,0 +1,5 @@
+.venv
+.env
+.openai_api_key
+.pinecone_api_key
+/sec_edgar_filings
