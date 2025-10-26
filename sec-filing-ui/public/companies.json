@@ -1,0 +1,17 @@
+[
+  { "name": "Apple Inc.", "ticker": "AAPL" },
+  { "name": "Microsoft Corporation", "ticker": "MSFT" },
+  { "name": "Amazon.com, Inc.", "ticker": "AMZN" },
+  { "name": "Alphabet Inc. (Google)", "ticker": "GOOGL" },
+  { "name": "Meta Platforms, Inc.", "ticker": "META" },
+  { "name": "NVIDIA Corporation", "ticker": "NVDA" },
+  { "name": "Tesla, Inc.", "ticker": "TSLA" },
+  { "name": "Berkshire Hathaway Inc.", "ticker": "BRK-B" },
+  { "name": "Eli Lilly and Company", "ticker": "LLY" },
+  { "name": "JPMorgan Chase & Co.", "ticker": "JPM" },
+  { "name": "Johnson & Johnson", "ticker": "JNJ" },
+  { "name": "Visa Inc.", "ticker": "V" },
+  { "name": "Exxon Mobil Corporation", "ticker": "XOM" },
+  { "name": "Walmart Inc.", "ticker": "WMT" },
+  { "name": "Procter & Gamble Co.", "ticker": "PG" }
+]
