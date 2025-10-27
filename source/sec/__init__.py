@@ -1,1 +1,0 @@
-from .sec import SECFilings
