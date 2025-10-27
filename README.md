@@ -68,6 +68,8 @@ docker-compose up --build
 The application will be available at `http://localhost:3000`.
 
 
+# Finassistant Project Directory Structure
+
 finassistant/
 │
 ├── .github/
@@ -134,5 +136,3 @@ finassistant/
 ├── docker-compose.yml                 # For easy local development setup
 ├── LICENSE                            # Your project's open-source license (e.g., MIT)
 └── README.md                          # The high-level project documentation
-
-
