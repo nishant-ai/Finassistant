@@ -67,72 +67,55 @@ docker-compose up --build
 
 The application will be available at `http://localhost:3000`.
 
+-----
 
-# Finassistant Project Directory Structure
+### \#\# Finassistant Project Directory Structure
 
+```
 finassistant/
 │
 ├── .github/
 │   └── workflows/
-│       └── ci-cd-pipeline.yml         # GitHub Actions workflow for testing and deployment
+│       └── ci-cd-pipeline.yml
 │
 ├── backend/
 │   ├── app/
-│   │   ├── __init__.py
-│   │   ├── api/                       # FastAPI routers/endpoints (e.g., /analyze)
-│   │   │   └── endpoints.py
-│   │   ├── agents/                    # LangGraph agent definitions
-│   │   │   ├── orchestrator.py
-│   │   │   └── specialized_agents.py
-│   │   ├── core/                      # App configuration, settings
-│   │   │   └── config.py
-│   │   ├── models/                    # Pydantic models for API requests/responses
-│   │   │   └── schemas.py
-│   │   └── tools/                     # Implementations of agent tools
-│   │       ├── sec_filing_tool.py
-│   │       ├── market_data_tool.py
-│   │       └── news_analyzer_tool.py
-│   │
-│   ├── ml_models/                     # For your fine-tuned model
+│   │   ├── api/
+│   │   ├── agents/
+│   │   ├── core/
+│   │   ├── models/
+│   │   └── tools/
+│   ├── ml_models/
 │   │   └── sentiment_analyzer/
-│   │       ├── model.safetensors
-│   │       └── config.json
-│   │
-│   ├── scripts/                       # One-off scripts (e.g., data ingestion)
-│   │   └── ingest_sec_filings.py
-│   │
-│   ├── tests/                         # Unit and integration tests for the backend
-│   │   ├── test_agents.py
-│   │   └── test_tools.py
-│   │
-│   ├── .env.example                   # Example environment variables
-│   ├── Dockerfile                     # Dockerfile for the backend service
-│   └── requirements.txt               # Python dependencies
+│   ├── scripts/
+│   ├── tests/
+│   ├── .env.example
+│   ├── Dockerfile
+│   └── requirements.txt
 │
 ├── frontend/
-│   ├── public/                        # Static assets (index.html, favicon)
+│   ├── public/
 │   ├── src/
-│   │   ├── assets/                    # Images, fonts, etc.
-│   │   ├── components/                # Reusable React components (e.g., Chart, AgentStatus)
-│   │   ├── hooks/                     # Custom React hooks
-│   │   ├── services/                  # API client for communicating with the backend
-│   │   ├── styles/                    # CSS or styling files
-│   │   └── App.tsx                    # Main React application component
-│   │
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── styles/
 │   ├── .env.example
-│   ├── Dockerfile                     # Dockerfile for the frontend service
+│   ├── Dockerfile
 │   ├── package.json
 │   └── tsconfig.json
 │
 ├── infra/
-│   └── k8s/                           # Kubernetes manifest files
+│   └── k8s/
 │       ├── backend-deployment.yaml
 │       ├── frontend-deployment.yaml
-│       ├── database-deployment.yaml   # For ChromaDB/Neo4j if self-hosted
+│       ├── database-deployment.yaml
 │       ├── service.yaml
 │       └── ingress.yaml
 │
-├── .gitignore                         # Standard git ignore file
-├── docker-compose.yml                 # For easy local development setup
-├── LICENSE                            # Your project's open-source license (e.g., MIT)
-└── README.md                          # The high-level project documentation
+├── .gitignore
+├── docker-compose.yml
+├── LICENSE
+└── README.md
+```
