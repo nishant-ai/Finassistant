@@ -1,7 +1,3 @@
-Of course. Here is a professional `README.md` file ready for your initial GitHub commit. It's structured to serve as both a project overview and a showcase of your technical planning.
-
------
-
 # Finassistant: An Agentic AI Financial Analyst
 
 [](https://www.google.com/search?q=https://github.com/nishant-ai/finassistant)
