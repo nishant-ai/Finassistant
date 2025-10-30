@@ -1,0 +1,8 @@
+langchain>=0.1.0
+langchain-google-genai>=2.0.0
+langgraph>=0.0.20
+yfinance>=0.2.0
+pandas>=2.0.0
+python-dotenv>=1.0.0
+newsapi-python>=0.2.7
+newspaper3k>=0.2.8
