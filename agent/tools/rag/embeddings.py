@@ -10,8 +10,15 @@ from typing import List, Union
 from functools import lru_cache
 import hashlib
 import json
-from google import genai
-from google.genai import types
+
+# Try new SDK first (google-generativeai >= 0.9.0), fall back to old SDK
+try:
+    from google import genai
+    from google.genai import types
+    USE_NEW_SDK = True
+except ImportError:
+    import google.generativeai as genai
+    USE_NEW_SDK = False
 
 
 class EmbeddingService:
@@ -28,7 +35,15 @@ class EmbeddingService:
             model_name: Google embedding model to use
         """
         self.model_name = model_name
-        self.client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+
+        if USE_NEW_SDK:
+            # New SDK (>= 0.9.0)
+            self.client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+        else:
+            # Old SDK (< 0.9.0)
+            genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+            self.client = None
+
         self._embedding_dim = 768  # text-embedding-004 dimension
 
     @property
@@ -50,11 +65,20 @@ class EmbeddingService:
             raise ValueError("Cannot embed empty text")
 
         try:
-            result = self.client.models.embed_content(
-                model=self.model_name,
-                content=text
-            )
-            return result.embeddings[0].values
+            if USE_NEW_SDK:
+                # New SDK (>= 0.9.0)
+                result = self.client.models.embed_content(
+                    model=self.model_name,
+                    content=text
+                )
+                return result.embeddings[0].values
+            else:
+                # Old SDK (< 0.9.0)
+                result = genai.embed_content(
+                    model=f"models/{self.model_name}",
+                    content=text
+                )
+                return result['embedding']
 
         except Exception as e:
             print(f"Error generating embedding: {e}")
@@ -82,12 +106,22 @@ class EmbeddingService:
             batch = texts[i:i + batch_size]
 
             try:
-                result = self.client.models.embed_content(
-                    model=self.model_name,
-                    content=batch
-                )
-                batch_embeddings = [emb.values for emb in result.embeddings]
-                embeddings.extend(batch_embeddings)
+                if USE_NEW_SDK:
+                    # New SDK (>= 0.9.0)
+                    result = self.client.models.embed_content(
+                        model=self.model_name,
+                        content=batch
+                    )
+                    batch_embeddings = [emb.values for emb in result.embeddings]
+                    embeddings.extend(batch_embeddings)
+                else:
+                    # Old SDK (< 0.9.0) - embed one at a time
+                    for text in batch:
+                        result = genai.embed_content(
+                            model=f"models/{self.model_name}",
+                            content=text
+                        )
+                        embeddings.append(result['embedding'])
 
             except Exception as e:
                 print(f"Error embedding batch {i // batch_size}: {e}")

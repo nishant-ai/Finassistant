@@ -12,7 +12,6 @@ from datetime import datetime
 from langchain_core.tools import tool
 
 from agent.tools.sec_filing.sec_filing import SECFilingsTool, SECFilingProcessor
-from agent.tools.news.news import NewsAPI
 from .chunking import SECFilingChunker, NewsArticleChunker, Chunk
 from .vector_store import get_vector_store
 from .embeddings import get_embedding_service
