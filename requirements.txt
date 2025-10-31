@@ -6,3 +6,14 @@ pandas>=2.0.0
 python-dotenv>=1.0.0
 newsapi-python>=0.2.7
 newspaper3k>=0.2.8
+
+# RAG Dependencies
+chromadb>=0.4.0
+google-generativeai>=0.8.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+sec-edgar-downloader>=5.0.0
+
+# Web Search Dependencies
+duckduckgo-search>=5.0.0
+requests>=2.31.0

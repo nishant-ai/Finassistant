@@ -18,17 +18,38 @@ def get_newsapi_client():
 @tool
 def get_stock_news(ticker: str, days: Optional[int] = 7) -> str:
     """
-    Fetches recent news articles related to a specific stock or company.
-    Use this tool when a user asks about news, recent developments, or
-    current events related to a company or stock ticker.
+    **PRIMARY TOOL for REAL-TIME/RECENT company news.**
+
+    Fetches the latest news articles about a specific stock or company from NewsAPI.
+    This provides CURRENT, UP-TO-DATE news (last 7-30 days).
+
+    **When to use:**
+    - User asks about "latest", "recent", or "current" news
+    - Questions about what's happening NOW or in the past few days/weeks
+    - Breaking news or recent developments
+    - Real-time market events
+    - "What's the news about [company]?"
+
+    **When NOT to use:**
+    - Historical news analysis or themes → Use semantic_search_news
+    - Deep analysis across multiple sources → Use multi_document_analysis
+    - General market news (not company-specific) → Use get_market_news
+
+    Data source: NewsAPI (real-time, refreshed constantly)
+    Speed: 2-3 seconds
 
     Args:
         ticker: Stock ticker symbol (e.g., 'AAPL', 'TSLA')
         days: Number of days to look back for news (default: 7, max: 30)
 
     Returns:
-        Formatted string containing news articles with titles, sources,
-        publication dates, and descriptions.
+        Formatted list of recent news articles with titles, sources, dates, and summaries
+
+    Example queries:
+        - "What's the latest news about Apple?"
+        - "Show me recent developments for Tesla"
+        - "Any news about Microsoft in the past week?"
+        - "What's happening with NVIDIA today?"
     """
     try:
         newsapi = get_newsapi_client()
@@ -99,16 +120,38 @@ def get_stock_news(ticker: str, days: Optional[int] = 7) -> str:
 @tool
 def get_market_news(category: Optional[str] = "business", max_articles: Optional[int] = 10) -> str:
     """
-    Fetches general market news and headlines from top financial news sources.
-    Use this tool when a user asks about overall market news, financial headlines,
-    or general business news (not specific to a single company).
+    **PRIMARY TOOL for GENERAL MARKET NEWS (not company-specific).**
+
+    Fetches top financial headlines and market news from major news sources.
+    Use for broad market trends, not specific companies.
+
+    **When to use:**
+    - User asks about "market news", "financial headlines", "today's business news"
+    - Questions about overall market conditions (not a specific company)
+    - General economic or business news
+    - Market trends and sentiment
+    - "What's happening in the market today?"
+
+    **When NOT to use:**
+    - Company-specific news → Use get_stock_news
+    - Real-time market data search → Use real_time_market_search
+    - Deep web search → Use web_search
+
+    Data source: NewsAPI top headlines (real-time)
+    Speed: 2-3 seconds
 
     Args:
         category: News category ('business', 'technology', or 'general')
         max_articles: Maximum number of articles to return (default: 10)
 
     Returns:
-        Formatted string containing top news headlines with sources and descriptions.
+        Formatted list of top financial headlines with sources and descriptions
+
+    Example queries:
+        - "What's the market news today?"
+        - "Show me top business headlines"
+        - "What's happening in financial markets?"
+        - "General market news"
     """
     try:
         newsapi = get_newsapi_client()
