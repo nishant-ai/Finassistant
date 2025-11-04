@@ -12,6 +12,7 @@ Dependencies:
 
 import os
 import re
+import shutil
 from typing import Optional, Dict
 from functools import lru_cache
 from sec_edgar_downloader import Downloader
@@ -112,6 +113,81 @@ class SECFilingsTool:
         if file_path:
             return self.read_filing_content(file_path)
         return None
+
+    def cleanup_ticker(self, ticker: str) -> bool:
+        """
+        Delete all downloaded filings for a specific ticker.
+
+        Args:
+            ticker: Stock ticker symbol to clean up
+
+        Returns:
+            True if cleanup successful, False otherwise
+        """
+        try:
+            ticker_path = os.path.join(self.base_download_path, ticker)
+            if os.path.exists(ticker_path):
+                shutil.rmtree(ticker_path)
+                return True
+            return False
+        except Exception as e:
+            print(f"Error cleaning up ticker {ticker}: {e}")
+            return False
+
+    def cleanup_all(self) -> bool:
+        """
+        Delete all downloaded SEC filings (entire sec-edgar-filings directory).
+
+        WARNING: This will delete ALL cached filings for ALL tickers.
+
+        Returns:
+            True if cleanup successful, False otherwise
+        """
+        try:
+            if os.path.exists(self.base_download_path):
+                shutil.rmtree(self.base_download_path)
+                return True
+            return False
+        except Exception as e:
+            print(f"Error cleaning up all filings: {e}")
+            return False
+
+    def get_cache_size(self) -> Dict[str, int]:
+        """
+        Get information about the size of cached filings.
+
+        Returns:
+            Dictionary with cache statistics:
+            - total_size_mb: Total size in megabytes
+            - num_tickers: Number of tickers cached
+            - tickers: List of cached ticker symbols
+        """
+        try:
+            if not os.path.exists(self.base_download_path):
+                return {"total_size_mb": 0, "num_tickers": 0, "tickers": []}
+
+            total_size = 0
+            tickers = []
+
+            for ticker in os.listdir(self.base_download_path):
+                ticker_path = os.path.join(self.base_download_path, ticker)
+                if os.path.isdir(ticker_path) and not ticker.startswith('.'):
+                    tickers.append(ticker)
+                    # Calculate directory size
+                    for dirpath, dirnames, filenames in os.walk(ticker_path):
+                        for filename in filenames:
+                            filepath = os.path.join(dirpath, filename)
+                            if os.path.exists(filepath):
+                                total_size += os.path.getsize(filepath)
+
+            return {
+                "total_size_mb": round(total_size / (1024 * 1024), 2),
+                "num_tickers": len(tickers),
+                "tickers": sorted(tickers)
+            }
+        except Exception as e:
+            print(f"Error getting cache size: {e}")
+            return {"total_size_mb": 0, "num_tickers": 0, "tickers": []}
 
 
 class SECFilingProcessor:
@@ -443,6 +519,102 @@ def compare_sec_filings(ticker: str, filing_type: str = "10-K", num_filings: int
 
     except Exception as e:
         return f"Error comparing filings for {ticker}: {str(e)}"
+
+
+@tool
+def cleanup_sec_cache(ticker: str = None) -> str:
+    """
+    Clean up cached SEC filing downloads to free up disk space.
+
+    This tool helps manage the sec-edgar-filings directory that accumulates
+    downloaded SEC filings. Use it when the cache gets too large or you want
+    to clear old data.
+
+    Args:
+        ticker: Optional. If provided, only deletes filings for this ticker.
+                If None, shows cache statistics without deleting.
+
+    Returns:
+        Status message about cleanup operation
+
+    Example queries:
+        - "Clean up SEC filings cache"
+        - "Delete cached SEC filings for Apple"
+        - "How much space are SEC filings taking up?"
+        - "Clear SEC filing cache for TSLA"
+    """
+    try:
+        tool = SECFilingsTool()
+
+        # Get cache info first
+        cache_info = tool.get_cache_size()
+
+        if ticker:
+            # Clean up specific ticker
+            ticker = ticker.upper()
+            if ticker in cache_info["tickers"]:
+                success = tool.cleanup_ticker(ticker)
+                if success:
+                    return f"✅ Successfully deleted all cached SEC filings for {ticker}."
+                else:
+                    return f"⚠️  Could not delete filings for {ticker} (may not exist)."
+            else:
+                return f"ℹ️  No cached filings found for {ticker}."
+        else:
+            # Just show cache info
+            if cache_info["num_tickers"] == 0:
+                return "ℹ️  SEC filing cache is empty (0 MB)."
+
+            response = f"**SEC Filing Cache Statistics**\n\n"
+            response += f"📊 Total size: {cache_info['total_size_mb']} MB\n"
+            response += f"📁 Cached tickers: {cache_info['num_tickers']}\n"
+            response += f"🏢 Tickers: {', '.join(cache_info['tickers'])}\n\n"
+            response += "💡 To clean up:\n"
+            response += "- Specify a ticker to delete: cleanup_sec_cache('AAPL')\n"
+            response += "- Or manually delete the 'sec-edgar-filings' directory\n"
+
+            return response
+
+    except Exception as e:
+        return f"Error managing SEC cache: {str(e)}"
+
+
+@tool
+def get_sec_cache_info() -> str:
+    """
+    Get information about cached SEC filing downloads.
+
+    Shows how much disk space is being used by cached SEC filings and
+    which tickers have cached data.
+
+    Returns:
+        Statistics about the SEC filing cache
+
+    Example queries:
+        - "Show me SEC filing cache statistics"
+        - "How much space are SEC filings using?"
+        - "What SEC filings are cached?"
+    """
+    try:
+        tool = SECFilingsTool()
+        cache_info = tool.get_cache_size()
+
+        if cache_info["num_tickers"] == 0:
+            return "ℹ️  SEC filing cache is empty (0 MB)."
+
+        response = f"**SEC Filing Cache Statistics**\n\n"
+        response += f"📊 Total size: {cache_info['total_size_mb']} MB\n"
+        response += f"📁 Number of tickers: {cache_info['num_tickers']}\n\n"
+        response += f"**Cached Tickers:**\n"
+        for ticker in cache_info['tickers']:
+            response += f"  • {ticker}\n"
+
+        response += f"\n💡 **Tip:** Use cleanup_sec_cache(ticker) to remove specific ticker's filings"
+
+        return response
+
+    except Exception as e:
+        return f"Error getting cache info: {str(e)}"
 
 
 if __name__ == "__main__":

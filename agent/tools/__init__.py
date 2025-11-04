@@ -16,15 +16,14 @@ from agent.tools.news.news import (
 from agent.tools.sec_filing.sec_filing import (
     get_sec_filing_summary,
     get_sec_financial_data,
-    search_sec_filing,
-    compare_sec_filings
+    compare_sec_filings,
+    cleanup_sec_cache,
+    get_sec_cache_info
 )
 
 from agent.tools.rag.rag_tools import (
     semantic_search_sec_filing,
-    semantic_search_news,
     multi_document_analysis,
-    index_news_for_ticker,
     rag_system_status
 )
 
@@ -47,12 +46,11 @@ __all__ = [
     'get_full_article_content',
     'get_sec_filing_summary',
     'get_sec_financial_data',
-    'search_sec_filing',
     'compare_sec_filings',
+    'cleanup_sec_cache',
+    'get_sec_cache_info',
     'semantic_search_sec_filing',
-    'semantic_search_news',
     'multi_document_analysis',
-    'index_news_for_ticker',
     'rag_system_status',
     'web_search',
     'financial_web_search',

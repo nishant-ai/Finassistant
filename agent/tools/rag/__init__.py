@@ -1,16 +1,16 @@
 """
 RAG (Retrieval-Augmented Generation) Tools
 
-Provides vector store-based semantic search across financial documents.
+Provides vector store-based semantic search across SEC filings.
 """
 
 from .embeddings import EmbeddingService
 from .vector_store import VectorStoreManager
-from .chunking import DocumentChunker, SECFilingChunker, NewsArticleChunker
+from .chunking import DocumentChunker, SECFilingChunker
 from .rag_tools import (
     semantic_search_sec_filing,
-    semantic_search_news,
-    multi_document_analysis
+    multi_document_analysis,
+    rag_system_status
 )
 
 __all__ = [
@@ -18,8 +18,7 @@ __all__ = [
     'VectorStoreManager',
     'DocumentChunker',
     'SECFilingChunker',
-    'NewsArticleChunker',
     'semantic_search_sec_filing',
-    'semantic_search_news',
-    'multi_document_analysis'
+    'multi_document_analysis',
+    'rag_system_status'
 ]

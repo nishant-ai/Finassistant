@@ -31,9 +31,9 @@ def get_stock_news(ticker: str, days: Optional[int] = 7) -> str:
     - "What's the news about [company]?"
 
     **When NOT to use:**
-    - Historical news analysis or themes → Use semantic_search_news
-    - Deep analysis across multiple sources → Use multi_document_analysis
+    - Deep web search for news → Use web_search or financial_web_search
     - General market news (not company-specific) → Use get_market_news
+    - Full article content → Use get_full_article_content
 
     Data source: NewsAPI (real-time, refreshed constantly)
     Speed: 2-3 seconds
