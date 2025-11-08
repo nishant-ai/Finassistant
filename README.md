@@ -665,7 +665,6 @@ For questions, issues, or feature requests:
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/Finassistant/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/yourusername/Finassistant/discussions)
-- **Email**: your.email@example.com
 
 ---
 
