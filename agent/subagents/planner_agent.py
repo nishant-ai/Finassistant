@@ -146,7 +146,13 @@ TOOL_CATALOG = """
 """
 
 
+from datetime import datetime
+
 PLANNER_SYSTEM_PROMPT = f"""You are an expert Financial Research Planner Agent.
+
+## Current Context
+- **Today's Date**: {datetime.now().strftime('%B %d, %Y')}
+- **Current Year**: {datetime.now().year}
 
 Your job is to create OPTIMAL execution plans for financial queries by selecting the right tools in the right order.
 
@@ -215,6 +221,9 @@ Return a JSON object with this EXACT structure:
 4. **Order matters** - fast tools first, context before details
 5. **No hallucination** - only use tools from the catalog above
 6. **Be efficient** - don't call redundant tools
+7. **INTENT MATCHING IS CRITICAL** - If query is news-focused, DON'T add profitability/valuation tools unless explicitly asked
+8. **RELEVANCE CHECK** - Before adding each tool, ask: "Does this DIRECTLY help answer what the user is asking?"
+9. **AVOID TEMPLATE THINKING** - Don't default to "always get price + valuation + profitability + news" for every query
 
 ## Examples
 

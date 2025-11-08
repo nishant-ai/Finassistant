@@ -1,0 +1,160 @@
+/* StreamingMessage.css - Claude-like streaming interface */
+
+.streaming-message-container {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* Agent Status Bar */
+.agent-status-bar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Pulsing Dot Animation */
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+/* Status Text */
+.status-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Message Styling */
+.streaming-message-container .message {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.streaming-message-container .message-avatar {
+  flex-shrink: 0;
+}
+
+.streaming-message-container .avatar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+
+.streaming-message-container .message-content {
+  flex: 1;
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #2d3748;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Streaming Cursor */
+.streaming-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background-color: #667eea;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Waiting Indicator */
+.waiting-indicator {
+  color: #a0aec0;
+  font-style: italic;
+  animation: fadeInOut 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .streaming-message-container .message {
+    background-color: #2d3748;
+  }
+
+  .streaming-message-container .message-content {
+    color: #e2e8f0;
+  }
+
+  .agent-status-bar {
+    background: linear-gradient(135deg, #4c51bf 0%, #553c9a 100%);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .streaming-message-container .message {
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .streaming-message-container .avatar-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .streaming-message-container .message-content {
+    font-size: 0.95rem;
+  }
+
+  .status-text {
+    font-size: 0.85rem;
+  }
+}

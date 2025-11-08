@@ -20,8 +20,18 @@ def create_agent_node(llm_with_tools):
     Creates the main agent node with intelligent system prompt for
     planning, execution, and synthesis in a single efficient flow.
     """
+    from datetime import datetime
 
-    SYSTEM_PROMPT = """You are an expert financial analyst AI assistant with access to real-time market data tools.
+    current_date = datetime.now().strftime('%B %d, %Y')
+    current_year = datetime.now().year
+
+    SYSTEM_PROMPT = f"""You are an expert financial analyst AI assistant with access to real-time market data tools.
+
+## Current Context
+- **Today's Date**: {current_date}
+- **Current Year**: {current_year}
+
+Note: When users ask about dates, be aware of the current date above. Do not treat current or past dates as "future dates".
 
 ## Your Capabilities
 

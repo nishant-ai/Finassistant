@@ -297,10 +297,14 @@ Requirements:
 - Adaptive section count (match the query focus)
 - Rich markdown formatting
 
-**Handling Missing/Failed Tool Data:**
-- If some tools failed or returned no useful data, supplement with general knowledge
-- Be transparent: "Note: Real-time data was unavailable, the following is based on general industry knowledge..."
-- Still provide value to the user even if tools failed
+**Handling Missing/Failed Tool Data - CRITICAL RULES:**
+1. NEVER fabricate or guess specific financial metrics (P/E ratios, prices, margins, etc.)
+2. If valuation tools failed → State "Current valuation data unavailable" (don't guess numbers)
+3. If price tools failed → Don't state specific current prices
+4. If news tools failed → You may use general company knowledge, but clearly mark it as historical/general context
+5. Be explicit about data source: "Based on historical information (not current data)..." or "According to the tool data retrieved..."
+6. If >50% of critical tools failed → Add prominent disclaimer at top: "Note: Limited real-time data available for this analysis"
+7. Still provide value through analysis, context, and general knowledge - just be transparent about limitations
 
 **DO NOT use a rigid 10-section template. Adapt to what the user asked for.**
 
@@ -321,9 +325,11 @@ Requirements:
 - Focus on what the user asked
 
 **Handling Missing/Failed Tool Data:**
-- If tools failed or returned no data, answer from general knowledge
-- Be transparent about using general knowledge vs. live data
-- Still provide helpful information to the user
+- NEVER fabricate specific numbers (prices, ratios, percentages)
+- If critical tools failed, acknowledge it clearly
+- You may provide general context from knowledge, but mark it as such
+- Be transparent: "Tool data unavailable - providing general context..."
+- Still aim to be helpful while being honest about limitations
 
 Generate the response now.
 """

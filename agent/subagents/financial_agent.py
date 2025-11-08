@@ -76,6 +76,21 @@ def create_financial_execution_agent(tools: List):
 
             tool = tool_map[tool_name]
 
+            # Validate and normalize common argument patterns
+            if 'ticker' in tool_args:
+                ticker = tool_args['ticker']
+                if not ticker or not isinstance(ticker, str):
+                    raise ValueError(f"Invalid ticker symbol: {ticker}")
+                # Normalize to uppercase
+                tool_args['ticker'] = ticker.upper().strip()
+
+            if 'tickers' in tool_args:
+                tickers = tool_args['tickers']
+                if not isinstance(tickers, list) or len(tickers) == 0:
+                    raise ValueError(f"Invalid tickers list: {tickers}")
+                # Normalize to uppercase
+                tool_args['tickers'] = [str(t).upper().strip() for t in tickers]
+
             # Execute the tool with arguments
             output = tool.invoke(tool_args)
 

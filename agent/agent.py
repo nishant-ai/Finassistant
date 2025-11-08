@@ -55,24 +55,28 @@ load_dotenv()
 
 def run_agent(
     query: str,
-    mode: Literal["chat", "report"] = "chat",
-    verbose: bool = False
+    mode: Literal["chat", "think"] = "chat",
+    verbose: bool = False,
+    conversation_history: Optional[list] = None
 ) -> str:
     """
     Unified agent runner - automatically selects single or multi-agent based on mode.
 
     Args:
         query: User's financial question (NO TAGS NEEDED)
-        mode: "chat" for quick responses, "report" for comprehensive analysis
-        verbose: Print execution details (only applies to report mode)
+        mode: "chat" for quick responses, "think" for comprehensive analysis
+        verbose: Print execution details (only applies to think mode)
+        conversation_history: List of previous messages for context (optional)
+                             Format: [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]
 
     Returns:
         Final formatted output
 
     Examples:
         >>> run_agent("What's Apple's P/E ratio?", mode="chat")
-        >>> run_agent("Analyze Tesla's financial health", mode="report")
+        >>> run_agent("Analyze Tesla's financial health", mode="think")
         >>> run_agent("Compare Microsoft and Google", mode="chat", verbose=True)
+        >>> run_agent("What about Microsoft?", mode="chat", conversation_history=[...])
     """
 
     # Collect all available tools
@@ -109,25 +113,40 @@ def run_agent(
         search_and_summarize
     ]
 
+    # Prepare messages with conversation history
+    messages = []
+
+    # Add conversation history if provided (limited context window)
+    if conversation_history:
+        from langchain_core.messages import AIMessage
+        for msg in conversation_history:
+            if msg["role"] == "user":
+                messages.append(HumanMessage(content=msg["content"]))
+            elif msg["role"] == "assistant":
+                messages.append(AIMessage(content=msg["content"]))
+
+    # Add current query
+    messages.append(HumanMessage(content=query))
+
     # Route to appropriate graph based on mode
     if mode == "chat":
         # Use single-agent graph (efficient, 2-4 LLM calls)
         graph = create_agent_graph(tools)
         result = graph.invoke({
-            "messages": [HumanMessage(content=query)]
+            "messages": messages
         })
         return result['messages'][-1].content
 
-    elif mode == "report":
+    elif mode == "think":
         # Use multi-agent graph (comprehensive, planner → financial → publisher)
         graph = create_multi_agent_graph(tools)
         result = graph.invoke({
-            "messages": [HumanMessage(content=query)],
+            "messages": messages,
             "output_mode": "report",
             "user_query": query
         })
 
-        # Optional: Print execution summary for reports
+        # Optional: Print execution summary for think mode
         if verbose:
             print("\n" + "=" * 70)
             print("EXECUTION SUMMARY")
@@ -141,7 +160,7 @@ def run_agent(
         return result['final_output']
 
     else:
-        raise ValueError(f"Invalid mode: {mode}. Must be 'chat' or 'report'")
+        raise ValueError(f"Invalid mode: {mode}. Must be 'chat' or 'think'")
 
 
 def main():

@@ -31,3 +31,13 @@ chromadb>=0.4.0
 # Web Search Dependencies
 duckduckgo-search>=5.0.0
 requests>=2.31.0
+
+# FastAPI & API Dependencies
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.0.0
+
+# MongoDB Database
+motor>=3.7.0
+pymongo>=4.10.0
+certifi>=2024.0.0
