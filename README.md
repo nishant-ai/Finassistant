@@ -413,6 +413,14 @@ python -m agent.agent think "Analyze Amazon's Q4 performance"
 
 ## 🚢 Deployment
 
+### **Docker Compose Files**
+
+- `docker-compose.yml` - Full stack (local development with FE + BE)
+- `docker-compose.backend.yml` - Backend only (for EC2 deployment)
+- `docker-compose.frontend.yml` - Frontend only (for testing before S3)
+
+See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for detailed usage.
+
 ### **Backend Deployment** (AWS EC2)
 Complete step-by-step guide: [DEPLOYMENT_BACKEND.md](DEPLOYMENT_BACKEND.md)
 
@@ -423,13 +431,14 @@ git clone https://github.com/yourusername/Finassistant.git
 cd Finassistant
 cp .env.example .env
 # Edit .env with your API keys
-docker-compose up -d
+docker-compose -f docker-compose.backend.yml up -d
 ```
 
 **Features:**
-- Docker containerization
-- Nginx reverse proxy
-- SSL with Let's Encrypt
+- Docker containerization (backend only)
+- Direct port exposure (8000)
+- Optional: Nginx reverse proxy
+- Optional: SSL with Let's Encrypt
 - Systemd service management
 - CloudWatch monitoring
 
@@ -445,6 +454,7 @@ aws cloudfront create-invalidation --distribution-id XXX --paths "/*"
 ```
 
 **Features:**
+- Static hosting on S3
 - CloudFront CDN distribution
 - Custom domain with SSL
 - Automated deployment script

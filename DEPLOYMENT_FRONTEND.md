@@ -2,12 +2,22 @@
 
 This guide covers deploying the Financial Assistant React frontend to AWS S3 with CloudFront CDN.
 
+## Important Note
+
+**Frontend is deployed as static files to S3, NOT as a Docker container.**
+
+The `docker-compose.frontend.yml` file is **only** for local testing before deploying to S3. In production:
+- **Frontend**: S3 + CloudFront (static files)
+- **Backend**: EC2 with Docker (see [DEPLOYMENT_BACKEND.md](DEPLOYMENT_BACKEND.md))
+
+See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for Docker testing options.
+
 ## Prerequisites
 
 - AWS Account with S3 and CloudFront access
 - AWS CLI installed and configured
 - Domain name (optional, for custom domain)
-- Backend API deployed and accessible
+- Backend API deployed and accessible on EC2
 
 ## Architecture Overview
 

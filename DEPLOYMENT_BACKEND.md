@@ -2,6 +2,15 @@
 
 This guide covers deploying the Financial Assistant backend (API + Agent) to AWS EC2 using Docker.
 
+## Important Note
+
+**For EC2 deployment, we use `docker-compose.backend.yml` which:**
+- Starts **only the backend** container
+- Exposes port **8000** to the host (accessible externally)
+- Does **not** start the frontend (frontend will be on S3 + CloudFront)
+
+See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for details on all docker-compose files.
+
 ## Prerequisites
 
 - AWS Account with EC2 access
@@ -108,28 +117,40 @@ MONGODB_URL=your_mongodb_connection_string
 
 Save with `Ctrl+X`, then `Y`, then `Enter`.
 
-### 3.3 Build and Run with Docker Compose
+### 3.3 Build and Run with Docker Compose (Backend Only)
 ```bash
-# Build the image
-docker-compose build
+# Build the backend image
+docker-compose -f docker-compose.backend.yml build
 
-# Start the service
-docker-compose up -d
+# Start the backend service
+docker-compose -f docker-compose.backend.yml up -d
 
 # Check logs
-docker-compose logs -f backend
+docker-compose -f docker-compose.backend.yml logs -f
 ```
+
+**Note**: We use `docker-compose.backend.yml` which only starts the backend container with port 8000 exposed.
 
 ### 3.4 Verify Deployment
 ```bash
 # Check if container is running
 docker ps
+# Should show: finassistant-backend with ports 8000/tcp
 
-# Test API
+# Test API locally on EC2
 curl http://localhost:8000/api/health
 
-# Test from outside EC2
+# Test from your computer (replace with your actual EC2 public IP)
 curl http://your-ec2-public-ip:8000/api/health
+```
+
+Expected response:
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-11-08T...",
+  "version": "1.0.0"
+}
 ```
 
 ## Step 4: Setup Reverse Proxy with Nginx (Production)
@@ -262,8 +283,8 @@ sudo tail -f /var/log/nginx/error.log
 ```bash
 cd ~/Finassistant
 git pull
-docker-compose build
-docker-compose up -d
+docker-compose -f docker-compose.backend.yml build
+docker-compose -f docker-compose.backend.yml up -d
 ```
 
 ### 7.3 Backup Data
@@ -324,13 +345,13 @@ Configure CloudWatch for logs and metrics monitoring.
 ### Container Won't Start
 ```bash
 # Check logs
-docker-compose logs backend
+docker-compose -f docker-compose.backend.yml logs
 
 # Check if port is in use
 sudo lsof -i :8000
 
 # Restart container
-docker-compose restart backend
+docker-compose -f docker-compose.backend.yml restart
 ```
 
 ### Cannot Connect to MongoDB
@@ -344,10 +365,10 @@ docker-compose restart backend
 free -h
 
 # Restart container with memory limit
-docker-compose down
-# Edit docker-compose.yml and add:
+docker-compose -f docker-compose.backend.yml down
+# Edit docker-compose.backend.yml and add under backend service:
 #   mem_limit: 2g
-docker-compose up -d
+docker-compose -f docker-compose.backend.yml up -d
 ```
 
 ### API Returns 502 Bad Gateway
@@ -369,8 +390,8 @@ services:
         max-file: "3"
 ```
 
-### 8.2 Use Gunicorn Workers
-Update Dockerfile CMD:
+### 8.2 Use Gunicorn Workers (Optional)
+If you need multiple workers for higher concurrency, update Dockerfile CMD:
 ```dockerfile
 CMD ["gunicorn", "api.app:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
 ```
@@ -378,6 +399,12 @@ CMD ["gunicorn", "api.app:app", "--workers", "4", "--worker-class", "uvicorn.wor
 Add gunicorn to requirements.txt:
 ```
 gunicorn>=21.0.0
+```
+
+Then rebuild:
+```bash
+docker-compose -f docker-compose.backend.yml build
+docker-compose -f docker-compose.backend.yml up -d
 ```
 
 ## Cost Optimization
