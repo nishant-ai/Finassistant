@@ -311,18 +311,16 @@ async def _process_agent_query(
 
 
 # API Endpoints
-@app.get("/", response_model=Dict[str, str])
+@app.get("/")
 async def root():
     """Root endpoint with API information"""
     return {
         "message": "Financial Assistant Agent API",
         "version": "1.0.0",
         "docs": "/docs",
-        "endpoints": {
-            "health": "/api/health",
-            "chat": "/api/chat",
-            "report": "/api/report"
-        }
+        "health": "/api/health",
+        "chat": "/api/chat",
+        "report": "/api/report"
     }
 
 
