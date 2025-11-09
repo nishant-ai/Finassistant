@@ -6,7 +6,22 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const WS_URL = 'ws://localhost:8000/ws/chat';
+// Determine WebSocket URL based on environment
+const getWebSocketUrl = () => {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+  // If API URL is relative (Docker/production), use current host
+  if (apiUrl.startsWith('/')) {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const host = window.location.host;
+    return `${protocol}//${host}/ws/chat`;
+  }
+
+  // For development with explicit URL, convert http to ws
+  return apiUrl.replace('http://', 'ws://').replace('https://', 'wss://') + '/ws/chat';
+};
+
+const WS_URL = getWebSocketUrl();
 
 export const useWebSocket = (userId = 'default_user') => {
   const [isConnected, setIsConnected] = useState(false);

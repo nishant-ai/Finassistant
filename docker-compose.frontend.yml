@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  # Frontend service (for local testing before S3 deployment)
+  # NOTE: In production, this will be hosted on S3 + CloudFront
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    container_name: finassistant-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
